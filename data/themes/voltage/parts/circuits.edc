@@ -1,0 +1,22 @@
+/* Keep each light on the original circuit path; no object maps or layout changes. */
+#define CIRCUIT_POINT(STATE, X, Y, OPACITY, SVG) \
+description { \
+   state: STATE 0.0; offset_scale: 1; \
+   rel1 { to: "body"; relative: 0 0; offset: (X - 6) (Y - 6); } \
+   rel2 { to: "body"; relative: 0 0; offset: (X + 5) (Y + 5); } \
+   color: 255 255 255 OPACITY; \
+   image.normal: SVG; \
+}
+#define CIRCUIT_TRACE(NAME, SVG, X0, Y0, X1, Y1, X2, Y2, X3, Y3, T1, T2, T3, ALPHA, DELAY) \
+part { \
+   name: NAME; type: VECTOR; scale: 1; mouse_events: 0; \
+   CIRCUIT_POINT("default", X0, Y0, 0, SVG) \
+   CIRCUIT_POINT("p0", X0, Y0, ALPHA, SVG) \
+   CIRCUIT_POINT("p1", X1, Y1, ALPHA, SVG) \
+   CIRCUIT_POINT("p2", X2, Y2, ALPHA, SVG) \
+   CIRCUIT_POINT("p3", X3, Y3, ALPHA, SVG) \
+   CIRCUIT_POINT("off", X3, Y3, 0, SVG) \
+}
+#include "../circuit-routes.edc"
+#undef CIRCUIT_TRACE
+#undef CIRCUIT_POINT

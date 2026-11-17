@@ -1,0 +1,11 @@
+# cosmetic
+
+ - fix order of includes
+
+ - add SPDX
+
+# compilation
+
+ - tests/worker-updates.c and others : contains /tmp/**** : use eina_strbuf + eina_environment_tmp_get()
+
+ - remove unistd.h if possible and include it on non Windows OS

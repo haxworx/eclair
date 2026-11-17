@@ -1,0 +1,5 @@
+program { signal: "mouse,clicked,1"; source: "button_menu"; action: SIGNAL_EMIT "eclair_menu_toggle" ""; }
+program { signal: "mouse,in"; source: "button_menu"; action: STATE_SET "over" 0.0; target: "button_menu_hover"; }
+program { signal: "mouse,out"; source: "button_menu"; action: STATE_SET "default" 0.0; target: "button_menu_hover"; }
+program { signal: "signal_menu_open"; source: "*"; action: STATE_SET "open" 0.0; target: "button_menu"; }
+program { signal: "signal_menu_closed"; source: "*"; action: STATE_SET "default" 0.0; target: "button_menu"; }

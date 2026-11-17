@@ -1,0 +1,41 @@
+#define TRANSPORT_PROGRAM(NAME, SIGNAL) \
+program { \
+   name: "button_"NAME"_clicked"; signal: "mouse,clicked,1"; source: "button_"NAME"_rect"; \
+   action: SIGNAL_EMIT SIGNAL ""; \
+} \
+program { \
+   name: "button_"NAME"_in"; signal: "mouse,in"; source: "button_"NAME"_rect"; \
+   action: STATE_SET "over" 0.0; target: "button_"NAME; \
+} \
+program { \
+   name: "button_"NAME"_out"; signal: "mouse,out"; source: "button_"NAME"_rect"; \
+   action: STATE_SET "default" 0.0; target: "button_"NAME; \
+} \
+program { \
+   name: "button_"NAME"_down"; signal: "mouse,down,1*"; source: "button_"NAME"_rect"; \
+   action: STATE_SET "down" 0.0; target: "button_"NAME; \
+} \
+program { \
+   name: "button_"NAME"_up"; signal: "mouse,up,1"; source: "button_"NAME"_rect"; \
+   action: STATE_SET "over" 0.0; target: "button_"NAME; \
+}
+TRANSPORT_PROGRAM("play", "eclair_play")
+TRANSPORT_PROGRAM("stop", "eclair_stop")
+TRANSPORT_PROGRAM("prev", "eclair_prev")
+TRANSPORT_PROGRAM("next", "eclair_next")
+TRANSPORT_PROGRAM("open", "eclair_open")
+program {
+   name: "button_pause_clicked";
+   signal: "mouse,clicked,1"; source: "button_pause_rect";
+   action: SIGNAL_EMIT "eclair_pause" "";
+}
+program {
+   name: "button_pause_down";
+   signal: "mouse,down,1*"; source: "button_pause_rect";
+   action: STATE_SET "down" 0.0; target: "button_pause";
+}
+program {
+   name: "button_pause_up";
+   signal: "mouse,up,1"; source: "button_pause_rect";
+   action: STATE_SET "play" 0.0; target: "button_pause";
+}

@@ -1,0 +1,325 @@
+/* Shared widget contracts; artwork and colours come from each player theme. */
+group { name: "eclair/editor";
+   parts {
+      part { name: "background"; type: RECT; mouse_events: 0;
+         description { state: "default" 0.0; color: UI_BOTTOM; }
+      }
+      part { name: "surface"; type: VECTOR; mouse_events: 0;
+         scale: 1;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel2 { relative: 1 0; offset: -1 65; } image.normal: "ui_editor.svg";
+         }
+      }
+      part { name: "title"; type: TEXT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.offset: 24 16; rel2 { relative: 1 0; offset: -140 47; }
+            color: UI_INK;
+            text { text: "PLAYLIST / COLLECTION"; font: "Edje Vera"; size: 15; align: 0 0.5; min: 0 1; }
+         }
+      }
+      part { name: "eclair.content"; type: SWALLOW; scale: 1;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.offset: 22 82; rel2.offset: -23 -19;
+         }
+      }
+   }
+}
+
+/* About shares widget colours, with an individual SVG signature per theme. */
+group { name: "eclair/about";
+   parts {
+      part { name: "background"; type: RECT; mouse_events: 0;
+         description { state: "default" 0.0; color: UI_BOTTOM; }
+      }
+      part { name: "signature"; type: VECTOR; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.offset: 0 12; rel2 { relative: 1 0; offset: -1 139; }
+            image.normal: "ui_about.svg";
+         }
+      }
+      part { name: "title"; type: TEXT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1 { relative: 0 0; offset: 20 151; }
+            rel2 { relative: 1 0; offset: -21 185; }
+            color: UI_INK;
+            text { text: "E C L A I R"; font: "Edje Vera"; size: 23; }
+         }
+      }
+      part { name: "version"; type: TEXT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1 { relative: 0 0; offset: 20 190; }
+            rel2 { relative: 1 0; offset: -21 211; }
+            color: UI_ACCENT;
+            text { font: "Edje Vera"; size: 10; }
+         }
+      }
+      part { name: "eclair.content"; type: SWALLOW; scale: 1;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.offset: 28 231; rel2.offset: -29 -23;
+         }
+      }
+   }
+}
+
+group { name: "elm/button/base/default";
+   parts {
+      part { name: "surface"; type: VECTOR; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; image.normal: "ui_button.svg"; min: 36 36; }
+         description { state: "over" 0.0; inherit: "default" 0.0; image.normal: "ui_hover.svg"; }
+         description { state: "pressed" 0.0; inherit: "default" 0.0; image.normal: "ui_pressed.svg"; }
+         description { state: "disabled" 0.0; inherit: "default" 0.0; color: 128 128 128 128; }
+      }
+      part { name: "elm.text"; type: TEXT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.offset: 12 9; rel2.offset: -13 -10; color: UI_INK;
+            text { font: "Edje Vera"; size: 10; min: 1 1; align: 0.5 0.5; }
+         }
+      }
+      part { name: "event"; type: RECT;
+         description { state: "default" 0.0; color: 0 0 0 0; }
+         description { state: "disabled" 0.0; inherit: "default" 0.0; visible: 0; }
+      }
+   }
+   programs {
+      program { signal: "mouse,in"; source: "event"; action: STATE_SET "over" 0.0; target: "surface"; }
+      program { signal: "mouse,out"; source: "event"; action: STATE_SET "default" 0.0; target: "surface"; }
+      program { signal: "mouse,down,1"; source: "event"; action: SIGNAL_EMIT "elm,action,press" "elm";
+         after: "press"; }
+      program { name: "press"; action: STATE_SET "pressed" 0.0; target: "surface"; }
+      program { signal: "mouse,up,1"; source: "event"; action: SIGNAL_EMIT "elm,action,unpress" "elm";
+         after: "release"; }
+      program { name: "release"; action: STATE_SET "default" 0.0; target: "surface"; }
+      program { signal: "mouse,clicked,1"; source: "event"; action: SIGNAL_EMIT "elm,action,click" "elm"; }
+      program { signal: "elm,state,disabled"; source: "elm"; action: STATE_SET "disabled" 0.0; target: "surface"; target: "event"; }
+      program { signal: "elm,state,enabled"; source: "elm"; action: STATE_SET "default" 0.0; target: "surface"; target: "event"; }
+      program { signal: "elm,action,focus_highlight,show"; source: "elm"; action: STATE_SET "over" 0.0; target: "surface"; }
+      program { signal: "elm,action,focus_highlight,hide"; source: "elm"; action: STATE_SET "default" 0.0; target: "surface"; }
+   }
+}
+
+group { name: "elm/check/base/default";
+   parts {
+      part { name: "mark"; type: VECTOR; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; min: 24 24; max: 24 24; image.normal: "ui_check_off.svg"; }
+         description { state: "on" 0.0; inherit: "default" 0.0; image.normal: "ui_check_on.svg"; }
+      }
+      part { name: "event"; type: RECT; scale: 1;
+         description { state: "default" 0.0; min: 32 32; color: 0 0 0 0; }
+      }
+   }
+   programs {
+      program { signal: "mouse,clicked,1"; source: "event"; action: SIGNAL_EMIT "elm,action,check,toggle" "elm"; }
+      program { signal: "elm,state,check,on"; source: "elm"; action: STATE_SET "on" 0.0; target: "mark"; }
+      program { signal: "elm,state,check,off"; source: "elm"; action: STATE_SET "default" 0.0; target: "mark"; }
+   }
+}
+
+group { name: "elm/genlist/item/default/default";
+   alias: "elm/genlist/item_odd/default/default";
+   alias: "elm/genlist/item_compress/default/default";
+   alias: "elm/genlist/item_compress_odd/default/default";
+   data.item: "texts" "elm.text";
+   data.item: "contents" "elm.swallow.icon";
+   data.item: "states" "chosen";
+   parts {
+      part { name: "base"; type: RECT; mouse_events: 0;
+         description { state: "default" 0.0; color: UI_WELL; }
+         description { state: "over" 0.0; inherit: "default" 0.0; color: UI_BOTTOM; }
+      }
+      part { name: "line"; type: RECT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.relative: 0 1; rel1.offset: 12 -1; rel2.offset: -13 -1; color: UI_EDGE;
+         }
+      }
+      part { name: "chosen"; type: RECT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1; visible: 0;
+            rel1.offset: 0 8; rel2 { relative: 0 1; offset: 2 -9; } color: UI_ACCENT;
+         }
+         description { state: "active" 0.0; inherit: "default" 0.0; visible: 1; }
+      }
+      part { name: "elm.swallow.icon"; type: SWALLOW; scale: 1;
+         description { state: "default" 0.0; offset_scale: 1; min: 32 38; fixed: 1 0;
+            align: 0 0.5; rel1.offset: 8 3; rel2 { relative: 0 1; offset: 39 -4; }
+         }
+      }
+      part { name: "elm.text"; type: TEXT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1 { to_x: "elm.swallow.icon"; relative: 1 0; offset: 8 9; }
+            rel2.offset: -17 -10; color: UI_INK;
+            text { font: "Edje Vera"; size: 11; min: 0 1; align: 0 0.5; ellipsis: 1; }
+         }
+      }
+   }
+   programs {
+      program { signal: "mouse,in"; source: "*"; action: STATE_SET "over" 0.0; target: "base"; }
+      program { signal: "mouse,out"; source: "*"; action: STATE_SET "default" 0.0; target: "base"; }
+      program { signal: "elm,state,chosen,active"; source: "elm"; action: STATE_SET "active" 0.0; target: "chosen"; }
+      program { signal: "elm,state,chosen,passive"; source: "elm"; action: STATE_SET "default" 0.0; target: "chosen"; }
+   }
+}
+
+group { name: "elm/scroller/base/default";
+   alias: "elm/genlist/base/default";
+   data.item: "focus_highlight" "on";
+   parts {
+      part { name: "bg"; type: RECT; mouse_events: 0;
+         description { state: "default" 0.0; color: UI_WELL; }
+      }
+      part { name: "clipper"; type: RECT;
+         description { state: "default" 0.0; rel.to: "elm.swallow.content"; }
+      }
+      part { name: "elm.swallow.background"; type: SWALLOW; description { state: "default" 0.0; } }
+      part { name: "elm.swallow.content"; type: SWALLOW; clip_to: "clipper"; scale: 1;
+         description { state: "default" 0.0; offset_scale: 1; rel2.offset: -15 -1; }
+      }
+      part { name: "sb_vbar"; type: RECT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1 { relative: 1 0; offset: -11 4; } rel2.offset: -5 -5; color: UI_BOTTOM;
+         }
+      }
+      part { name: "elm.dragable.vbar"; type: RECT; scale: 1;
+         dragable { x: 0 0 0; y: 1 1 0; confine: "sb_vbar"; }
+         description { state: "default" 0.0; min: 6 22; fixed: 1 1;
+            rel1 { to: "sb_vbar"; relative: 0.5 0.5; }
+            rel2 { to: "sb_vbar"; relative: 0.5 0.5; }
+            color: UI_ACCENT;
+         }
+         description { state: "hidden" 0.0; inherit: "default" 0.0; visible: 0; }
+      }
+   }
+   programs {
+      program { signal: "load"; source: ""; action: SIGNAL_EMIT "reload" "elm"; }
+      program { signal: "elm,action,hide,vbar"; source: "elm"; action: STATE_SET "hidden" 0.0; target: "elm.dragable.vbar"; }
+      program { signal: "elm,action,show,vbar"; source: "elm"; action: STATE_SET "default" 0.0; target: "elm.dragable.vbar"; }
+   }
+}
+
+group { name: "elm/entry/base-single/default";
+   styles {
+      style { name: "ui_entry"; base: UI_ENTRY_STYLE; }
+   }
+   parts {
+      part { name: "surface"; type: VECTOR; mouse_events: 0;
+         description { state: "default" 0.0; image.normal: "ui_search.svg"; }
+      }
+      part { name: "elm.guide"; type: TEXTBLOCK; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; rel.to: "elm.text";
+            text { style: "ui_entry"; min: 0 1; align: 0 0.5; }
+         }
+         description { state: "hidden" 0.0; inherit: "default" 0.0; visible: 0; }
+      }
+      part { name: "elm.text"; type: TEXTBLOCK; scale: 1; entry_mode: EDITABLE; select_mode: DEFAULT;
+         cursor_mode: BEFORE; multiline: 0;
+         source: "elm/entry/selection/default"; source4: "elm/entry/cursor/default";
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.offset: 14 12; rel2.offset: -15 -13;
+            text { style: "ui_entry"; min: 1 1; align: 0 0.5; }
+         }
+      }
+   }
+   programs {
+      program { signal: "load"; source: ""; action: FOCUS_SET; target: "elm.text"; }
+      program { signal: "elm,guide,disabled"; source: "elm"; action: STATE_SET "hidden" 0.0; target: "elm.guide"; }
+      program { signal: "elm,guide,enabled"; source: "elm"; action: STATE_SET "default" 0.0; target: "elm.guide"; }
+   }
+}
+
+group { name: "elm/entry/selection/default";
+   parts { part { name: "selection"; type: RECT; mouse_events: 0;
+      description { state: "default" 0.0; color: UI_ACCENT; color2: 255 255 255 255; }
+   } }
+}
+group { name: "elm/entry/cursor/default";
+   min: 1 0;
+   parts { part { name: "cursor"; type: RECT; mouse_events: 0;
+      description { state: "default" 0.0; color: UI_ACCENT; }
+   } }
+}
+group { name: "elm/label/base/default";
+   styles { style { name: "ui_label"; base: UI_LABEL_STYLE; } }
+   parts { part { name: "elm.text"; type: TEXTBLOCK; scale: 1; mouse_events: 0;
+      description { state: "default" 0.0;
+         text { style: "ui_label"; min: 1 1; }
+      }
+   } }
+}
+
+/* Compact, in-canvas cascading menu. Columns scroll rather than reducing the
+ * text to fit a short player; their placement is owned by eclair_menu.c. */
+group { name: "eclair/menu-overlay";
+   parts { part { name: "dismiss"; type: RECT;
+      description { state: "default" 0.0; color: 0 0 0 0; }
+   } }
+   programs { program { signal: "mouse,clicked,*"; source: "dismiss";
+      action: SIGNAL_EMIT "eclair,menu,dismiss" "eclair";
+   } }
+}
+group { name: "eclair/menu-panel";
+   parts {
+      part { name: "surface"; type: VECTOR; mouse_events: 0;
+         description { state: "default" 0.0; image.normal: "ui_menu.svg"; }
+      }
+      part { name: "eclair.content"; type: SWALLOW; scale: 1;
+         description { state: "default" 0.0; offset_scale: 1; rel1.offset: 2 2; rel2.offset: -3 -3; }
+      }
+   }
+}
+group { name: "eclair/menu-row";
+   parts {
+      part { name: "base"; type: VECTOR; mouse_events: 0;
+         description { state: "default" 0.0; image.normal: "ui_hover.svg"; visible: 0; }
+         description { state: "selected" 0.0; inherit: "default" 0.0; visible: 1; }
+      }
+      part { name: "eclair.icon"; type: SWALLOW; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1; min: 14 14; max: 14 14;
+            align: 0 0.5; rel1.offset: 4 2; rel2 { relative: 0 1; offset: 17 -3; }
+         }
+      }
+      part { name: "elm.text"; type: TEXT; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1;
+            rel1.offset: 22 3; rel2.offset: -15 -4; color: UI_INK;
+            text { font: "Edje Vera"; size: 10; min: 1 1; align: 0 0.5; ellipsis: -1; }
+         }
+      }
+      part { name: "arrow"; type: VECTOR; scale: 1; mouse_events: 0;
+         description { state: "default" 0.0; offset_scale: 1; min: 10 10; max: 10 10;
+            align: 1 0.5; rel1 { relative: 1 0; offset: -13 0; } rel2.offset: -3 -1;
+            image.normal: "ui_icon_arrow.svg"; visible: 0;
+         }
+         description { state: "branch" 0.0; inherit: "default" 0.0; visible: 1; }
+      }
+      part { name: "event"; type: RECT; ignore_flags: ON_HOLD;
+         description { state: "default" 0.0; color: 0 0 0 0; }
+      }
+   }
+   programs {
+      program { signal: "mouse,in"; source: "event"; action: SIGNAL_EMIT "eclair,menu,hover" "eclair"; }
+      program { signal: "mouse,clicked,1"; source: "event"; action: SIGNAL_EMIT "eclair,menu,activate" "eclair"; }
+      program { signal: "eclair,selected,on"; source: "eclair"; action: STATE_SET "selected" 0.0; target: "base"; }
+      program { signal: "eclair,selected,off"; source: "eclair"; action: STATE_SET "default" 0.0; target: "base"; }
+      program { signal: "eclair,branch,on"; source: "eclair"; action: STATE_SET "branch" 0.0; target: "arrow"; }
+   }
+}
+group { name: "eclair/menu-separator";
+   parts { part { name: "line"; type: RECT; scale: 1; mouse_events: 0;
+      description { state: "default" 0.0; offset_scale: 1;
+         rel1 { relative: 0 0.5; offset: 6 0; } rel2 { relative: 1 0.5; offset: -7 0; }
+         color: UI_EDGE;
+      }
+   } }
+}
+group { name: "elm/scroller/base/eclair-menu"; inherit: "elm/scroller/base/default";
+   alias: "elm/scroller/base/eclair-about";
+   parts {
+      part { name: "bg"; description { state: "default" 0.0; color: UI_BOTTOM; } }
+      part { name: "elm.swallow.content";
+         description { state: "default" 0.0; rel2.offset: -6 -1; }
+      }
+      part { name: "sb_vbar";
+         description { state: "default" 0.0; rel1.offset: -4 2; rel2.offset: -2 -3; }
+      }
+      part { name: "elm.dragable.vbar";
+         description { state: "default" 0.0; min: 3 12; }
+      }
+   }
+}

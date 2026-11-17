@@ -1,0 +1,16 @@
+/* The same title-bar position works for every body width. */
+part {
+   name: "button_menu"; type: VECTOR; scale: 1;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { to: "button_minimize"; relative: 0 0; offset: -24 0; }
+      rel2 { to: "button_minimize"; relative: 0 1; offset: -5 -1; }
+      image.normal: "button_menu.svg";
+   }
+   description { state: "open" 0.0; inherit: "default" 0.0; image.normal: "button_menu_on.svg"; }
+}
+part {
+   name: "button_menu_hover"; type: RECT; mouse_events: 0;
+   description { state: "default" 0.0; rel1.to: "button_menu"; rel2.to: "button_menu"; color: 255 255 255 0; }
+   description { state: "over" 0.0; inherit: "default" 0.0; color: 255 255 255 32; }
+}

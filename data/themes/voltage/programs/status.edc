@@ -1,0 +1,30 @@
+/* A quiet breathing light runs only during playback. */
+program {
+   name: "status_start"; signal: "signal_play"; source: "eclair_bin";
+   action: ACTION_STOP; target: "status_bright"; target: "status_dim";
+   after: "status_bright";
+}
+program {
+   name: "status_bright";
+   action: STATE_SET "bright" 0.0; target: "status_light";
+   transition: SINUSOIDAL 1.4; after: "status_dim";
+}
+program {
+   name: "status_dim";
+   action: STATE_SET "default" 0.0; target: "status_light";
+   transition: SINUSOIDAL 1.4; after: "status_bright";
+}
+program {
+   name: "status_pause"; signal: "signal_pause"; source: "eclair_bin";
+   action: ACTION_STOP; target: "status_bright"; target: "status_dim";
+   after: "status_idle";
+}
+program {
+   name: "status_stop"; signal: "signal_stop"; source: "eclair_bin";
+   action: ACTION_STOP; target: "status_bright"; target: "status_dim";
+   after: "status_idle";
+}
+program {
+   name: "status_idle";
+   action: STATE_SET "default" 0.0; target: "status_light";
+}

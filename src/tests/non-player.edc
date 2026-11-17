@@ -1,0 +1,3 @@
+collections {
+   group { name: "test_non_player"; }
+}

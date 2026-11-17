@@ -1,0 +1,43 @@
+/* Decorative playback accents stay inside the artwork header. */
+part {
+   name: "playback_accent_0"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { to: "artwork_pane"; relative: 1 0; offset: -76 5; }
+      rel2 { to: "artwork_pane"; relative: 1 0; offset: -59 22; }
+      image.normal: "playback_accent.svg"; color: 255 255 255 40;
+   }
+   description {
+      state: "lit" 0.0; inherit: "default" 0.0;
+      rel1.offset: (-76 + ACCENT_DX) (5 + ACCENT_DY); rel2.offset: (-59 + ACCENT_DX) (22 + ACCENT_DY);
+      color: 255 255 255 220;
+   }
+}
+part {
+   name: "playback_accent_1"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { to: "artwork_pane"; relative: 1 0; offset: -52 5; }
+      rel2 { to: "artwork_pane"; relative: 1 0; offset: -35 22; }
+      image.normal: "playback_accent.svg"; color: 255 255 255 40;
+   }
+   description {
+      state: "lit" 0.0; inherit: "default" 0.0;
+      rel1.offset: (-52 + ACCENT_DX) (5 + ACCENT_DY); rel2.offset: (-35 + ACCENT_DX) (22 + ACCENT_DY);
+      color: 255 255 255 220;
+   }
+}
+part {
+   name: "playback_accent_2"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { to: "artwork_pane"; relative: 1 0; offset: -28 5; }
+      rel2 { to: "artwork_pane"; relative: 1 0; offset: -11 22; }
+      image.normal: "playback_accent.svg"; color: 255 255 255 40;
+   }
+   description {
+      state: "lit" 0.0; inherit: "default" 0.0;
+      rel1.offset: (-28 + ACCENT_DX) (5 + ACCENT_DY); rel2.offset: (-11 + ACCENT_DX) (22 + ACCENT_DY);
+      color: 255 255 255 220;
+   }
+}

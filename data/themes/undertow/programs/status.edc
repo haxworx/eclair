@@ -1,0 +1,28 @@
+/* Echoes expand only while playing; pause and stop leave a quiet scope. */
+program {
+   name: "echo_start"; signal: "signal_play"; source: "eclair_bin";
+   action: ACTION_STOP; target: "echo_seed"; target: "echo_spread";
+   after: "echo_seed";
+}
+program {
+   name: "echo_seed"; action: STATE_SET "seed" 0.0; target: "status_light";
+   after: "echo_spread";
+}
+program {
+   name: "echo_spread"; action: STATE_SET "spread" 0.0; target: "status_light";
+   transition: DECELERATE 2.8; after: "echo_seed";
+}
+program {
+   name: "echo_pause"; signal: "signal_pause"; source: "eclair_bin";
+   action: ACTION_STOP; target: "echo_seed"; target: "echo_spread";
+   after: "echo_rest";
+}
+program {
+   name: "echo_stop"; signal: "signal_stop"; source: "eclair_bin";
+   action: ACTION_STOP; target: "echo_seed"; target: "echo_spread";
+   after: "echo_rest";
+}
+program {
+   name: "echo_rest"; action: STATE_SET "default" 0.0; target: "status_light";
+   transition: SINUSOIDAL 0.4;
+}

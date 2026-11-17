@@ -1,0 +1,98 @@
+group {
+   name: "eclair_playlist_entry";
+   min: 1 12;
+   parts {
+      part {
+         scale: 1;
+         name: "entry_rect";
+         type: RECT;
+         description {
+         offset_scale: 1;
+            state: "default" 0.0;
+            visible: 1;
+            color: 255 255 255 0;
+         }
+      }
+      part {
+         scale: 1;
+         name: "playlist_entry_name_clip";
+         type: RECT;
+         mouse_events: 0;
+         description {
+         offset_scale: 1;
+            state: "default" 0.0;
+            rel1 { offset: 3 1; }
+            rel2 {
+               relative: 0 1;
+               offset: -7 -1;
+               to_x: "playlist_entry_length";
+            }
+         }
+      }
+      part {
+         scale: 1;
+         name: "playlist_entry_name";
+         type: TEXT;
+         mouse_events: 0;
+         clip_to: "playlist_entry_name_clip";
+         description {
+         offset_scale: 1;
+            state: "default" 0.0;
+            color: 214 201 171 255;
+            align: 0 0.5;
+            rel1 { relative: 0 0; offset: 0 0; to: "playlist_entry_name_clip"; }
+            rel2 { relative: 1 1; offset: -1 -1; to: "playlist_entry_name_clip"; }
+            text {
+               ellipsis: -1;
+               text: "Filename";
+               font: "Edje Vera";
+               size: 10;
+               min: 1 1;
+               align: 0.0 0.4;
+            }
+         }
+         description {
+         offset_scale: 1;
+            state: "over" 0.0;
+            inherit: "default" 0.0;
+            color: 255 224 173 255;
+         }
+         description {
+            state: "over_right" 0.0;
+            inherit: "over" 0.0;
+            align: 1 0.5;
+         }
+      }
+      part {
+         scale: 1;
+         name: "playlist_entry_length";
+         type: TEXT;
+         mouse_events: 0;
+         description {
+         offset_scale: 1;
+            state: "default" 0.0;
+            color: 154 152 123 255;
+            align: 1 0.5;
+            rel1 { relative: 1 0; offset: -1 1; }
+            rel2 { relative: 1 1; offset: -1 1; }
+            text {
+               ellipsis: -1;
+               text: "0:00";
+               font: "Edje Vera";
+               size: 10;
+               min: 1 1;
+               align: 1.0 0.4;
+            }
+         }
+         description {
+         offset_scale: 1;
+            state: "over" 0.0;
+            inherit: "default" 0.0;
+            color: 255 224 173 255;
+         }
+      }
+   }
+   programs {
+      #include "../../common/playlist-scroll.edc"
+   }
+}

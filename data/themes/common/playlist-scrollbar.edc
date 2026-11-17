@@ -1,0 +1,128 @@
+part {
+         scale: 1;
+   name: "playlist_scrollbar_confine";
+   type: RECT;
+   clip_to: "playlist_clip";
+   description {
+         offset_scale: 1;
+      state: "default" 0.0;
+      visible: 0;
+      rel1 {
+         relative: 1.0 0.0;
+         offset: -13 21;
+         to: "playlist_box";
+      }
+      rel2 {
+         relative: 1.0 1.0;
+         offset: -13 -23;
+         to: "playlist_box";
+      }
+   }
+}
+/* A generous track hit area, below the draggable thumb. */
+part {
+   name: "playlist_scrollbar_track";
+   type: RECT;
+   scale: 1;
+   clip_to: "playlist_clip";
+   description {
+      state: "default" 0.0;
+      color: 0 0 0 0;
+      min: 16 1;
+      rel1 { to: "playlist_scrollbar_confine"; }
+      rel2 { to: "playlist_scrollbar_confine"; }
+   }
+}
+part {
+   type: VECTOR;
+         scale: 1;
+   name: "playlist_scrollbar_drag";
+   dragable {
+      confine: "playlist_scrollbar_confine";
+      x: 0 0 0;
+      y: 1 1 1;
+   }
+   description {
+         offset_scale: 1;
+      state: "default" 0.0;
+      min: 11 6;
+      max: 11 6;
+      visible: 1;
+      image {
+         normal: "playlist_scrollbar_button.svg";
+      }
+   }
+}
+part {
+   type: VECTOR;
+         scale: 1;
+   name: "playlist_scrollbar_up";
+   clip_to: "playlist_clip";
+   description {
+         offset_scale: 1;
+      state: "default" 0.0;
+      rel1 {
+         relative: 1.0 0.0;
+         offset: -23 12;
+         to: "playlist_box";
+      }
+      rel2 {
+         relative: 1.0 0.0;
+         offset: -13 17;
+         to: "playlist_box";
+      }
+      image {
+         normal: "playlist_scrollbar_up.svg";
+      }
+   }
+}
+part {
+   type: VECTOR;
+         scale: 1;
+   name: "playlist_scrollbar_down";
+   clip_to: "playlist_clip";
+   description {
+         offset_scale: 1;
+      state: "default" 0.0;
+      rel1 {
+         relative: 1.0 1.0;
+         offset: -23 -19;
+         to: "playlist_box";
+      }
+      rel2 {
+         relative: 1.0 1.0;
+         offset: -13 -14;
+         to: "playlist_box";
+      }
+      image {
+         normal: "playlist_scrollbar_down.svg";
+      }
+   }
+}
+part {
+   type: VECTOR;
+         scale: 1;
+   name: "playlist_box_over";
+   clip_to: "playlist_clip";
+   mouse_events: 0;
+   description {
+         offset_scale: 1;
+      state: "default" 0.0;
+      visible: 0;
+      rel1 {
+         to: "playlist_box";
+      }
+      rel2 {
+         to: "playlist_box";
+      }
+      image {
+         normal: "playlist_box_over.svg";
+      }
+   }
+   description {
+         offset_scale: 1;
+      state: "open" 0.0;
+      inherit: "default" 0.0;
+      visible: 1;
+   }
+}

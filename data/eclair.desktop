@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Eclair
+GenericName=Media Player
+Comment=Play music and videos
+Exec="@ECLAIR_EXECUTABLE@" -- %F
+TryExec=@ECLAIR_EXECUTABLE@
+Icon=eclair
+Terminal=false
+StartupNotify=true
+StartupWMClass=eclair
+Categories=AudioVideo;Player;
+Keywords=music;audio;video;playlist;media;
+MimeType=inode/directory;audio/mpeg;audio/ogg;audio/x-vorbis+ogg;application/ogg;audio/flac;audio/x-flac;audio/x-wav;audio/mp4;audio/aac;audio/x-mpegurl;application/vnd.apple.mpegurl;video/mp4;video/mpeg;video/ogg;video/webm;video/x-matroska;video/quicktime;video/x-msvideo;

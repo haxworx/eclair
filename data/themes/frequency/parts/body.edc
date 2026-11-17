@@ -1,0 +1,95 @@
+part {
+   name: "body";
+   type: VECTOR;
+   scale: 1;
+   mouse_events: 0;
+   description {
+      state: "default" 0.0;
+      offset_scale: 1;
+      min: 386 222; max: 386 222;
+      align: 0.5 0;
+      rel1.offset: 21 14;
+      rel2.offset: -22 -29;
+      image.normal: "body.svg";
+   }
+}
+part {
+   name: "window_button_bar";
+   type: RECT;
+   scale: 1;
+   mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      color: 0 0 0 0;
+      rel1 { relative: 0 0; offset: 322 0; to: "body"; }
+      rel2 { relative: 0 0; offset: 373 19; to: "body"; }
+   }
+}
+#define WINDOW_BUTTON(NAME, X) \
+part { \
+   name: NAME; type: VECTOR; scale: 1; \
+   description { \
+      state: "default" 0.0; offset_scale: 1; \
+      rel1 { relative: 0 0; offset: X 1; to: "body"; } \
+      rel2 { relative: 0 0; offset: (X + 19) 20; to: "body"; } \
+      image.normal: NAME".svg"; \
+   } \
+   description { state: "down" 0.0; inherit: "default" 0.0; color: 180 180 180 255; } \
+}
+WINDOW_BUTTON("button_minimize", 326)
+WINDOW_BUTTON("button_close", 350)
+
+part {
+   name: "status_light"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 20 13; to: "body"; }
+      rel2 { relative: 0 0; offset: 25 18; to: "body"; }
+      image.normal: "status.svg"; color: 255 255 255 80;
+   }
+   description { state: "bright" 0.0; inherit: "default" 0.0; color: 255 255 255 255; }
+}
+part {
+   name: "brand"; type: TEXT; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 33 8; to: "body"; }
+      rel2 { relative: 0 0; offset: 233 23; to: "body"; }
+      color: 190 151 99 255;
+      text { text: "F R E Q U E N C Y"; font: "Edje Vera"; size: 9; align: 0 0.5; }
+   }
+}
+
+/* progress_bar: visible rail, generous hit area, then draggable thumb. */
+part {
+   name: "progress_bar"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 28 45; to: "body"; }
+      rel2 { relative: 0 0; offset: 362 116; to: "body"; }
+      image.normal: "track.svg";
+   }
+}
+
+#define DIAL_MARK(LABEL, X) \
+part { name: "dial_"LABEL; type: TEXT; scale: 1; mouse_events: 0; \
+   description { state: "default" 0.0; offset_scale: 1; \
+      rel1 { relative: 0 0; offset: X 80; to: "body"; } \
+      rel2 { relative: 0 0; offset: (X + 30) 97; to: "body"; } \
+      color: 219 174 108 255; \
+      text { text: LABEL; font: "Edje Vera"; size: 9; } \
+   } \
+}
+DIAL_MARK("00", 22)
+DIAL_MARK("25", 102)
+DIAL_MARK("50", 182)
+DIAL_MARK("75", 262)
+DIAL_MARK("100", 342)
+part { name: "dial_caption"; type: TEXT; scale: 1; mouse_events: 0;
+   description { state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 248 8; to: "body"; }
+      rel2 { relative: 0 0; offset: 318 24; to: "body"; }
+      color: 154 154 123 255;
+      text { text: "TIME / %"; font: "Edje Vera"; size: 8; }
+   }
+}

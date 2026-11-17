@@ -1,0 +1,18 @@
+#ifndef _ECLAIR_COMPAT_H_
+#define _ECLAIR_COMPAT_H_
+
+#include <stdlib.h>
+
+#ifdef _WIN32
+
+# define eclair_realpath(path, resolved) _fullpath((resolved), (path), 0)
+
+#else
+
+# include <limits.h>
+
+# define eclair_realpath(path, resolved) realpath((path), (resolved))
+
+#endif
+
+#endif

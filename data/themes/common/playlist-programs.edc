@@ -1,0 +1,49 @@
+program {
+   name: "playlist_scroll_down_start";
+   source: "playlist_scrollbar_down";
+   signal: "mouse,down,1";
+   action: SIGNAL_EMIT "eclair_playlist_scroll_down_start" "";
+}
+program {
+   name: "playlist_scroll_down_stop";
+   source: "playlist_scrollbar_down";
+   signal: "mouse,up,1";
+   action: SIGNAL_EMIT "eclair_playlist_scroll_down_stop" "";
+}
+program {
+   name: "playlist_scroll_up_start";
+   source: "playlist_scrollbar_up";
+   signal: "mouse,down,1";
+   action: SIGNAL_EMIT "eclair_playlist_scroll_up_start" "";
+}
+program {
+   name: "playlist_scroll_up_stop";
+   source: "playlist_scrollbar_up";
+   signal: "mouse,up,1";
+   action: SIGNAL_EMIT "eclair_playlist_scroll_up_stop" "";
+}
+program {
+   name: "artwork_available"; signal: "signal_cover_set"; source: "eclair_bin";
+   action: ACTION_STOP; target: "artwork_reveal"; target: "artwork_reveal_begin";
+   after: "artwork_reveal_begin";
+}
+program {
+   name: "artwork_empty"; signal: "signal_cover_unset"; source: "eclair_bin";
+   action: STATE_SET "default" 0.0; target: "cover_placeholder";
+}
+/* Fade newly loaded covers into the fixed frame, including track changes. */
+program {
+   name: "artwork_reveal_begin";
+   action: STATE_SET "arrival" 0.0; target: "cover";
+   after: "artwork_placeholder_hide";
+}
+program {
+   name: "artwork_placeholder_hide";
+   action: STATE_SET "covered" 0.0; target: "cover_placeholder";
+   after: "artwork_reveal";
+}
+program {
+   name: "artwork_reveal";
+   action: STATE_SET "default" 0.0; target: "cover";
+   transition: SINUSOIDAL 0.65;
+}

@@ -1,0 +1,21 @@
+//TODO: edje bug
+program {
+   name: "update";
+   action: STATE_SET "default" 0.0;
+   target: "body";
+}
+program {
+   name: "play"; signal: "signal_play"; source: "eclair_bin";
+   action: STATE_SET "play" 0.0;
+   target: "play_clip"; target: "button_pause"; target: "button_pause_rect"; target: "progress_bar_drag";
+}
+program {
+   name: "pause"; signal: "signal_pause"; source: "eclair_bin";
+   action: STATE_SET "default" 0.0;
+   target: "play_clip"; target: "button_pause"; target: "button_pause_rect";
+}
+program {
+   name: "stop"; signal: "signal_stop"; source: "eclair_bin";
+   action: STATE_SET "default" 0.0;
+   target: "play_clip"; target: "button_pause"; target: "button_pause_rect"; target: "progress_bar_drag";
+}

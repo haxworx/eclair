@@ -1,0 +1,48 @@
+program {
+   name: "entry_hover_start";
+   signal: "mouse,in";
+   source: "entry_rect";
+   action: ACTION_STOP;
+   target: "entry_scroll_left";
+   target: "entry_scroll_right";
+   after: "entry_scroll_begin";
+}
+program {
+   name: "entry_scroll_begin";
+   action: STATE_SET "over" 0.0;
+   target: "playlist_entry_name";
+   target: "playlist_entry_length";
+   after: "entry_scroll_left";
+}
+program {
+   name: "entry_scroll_left";
+   action: STATE_SET "over_right" 0.0;
+   target: "playlist_entry_name";
+   transition: SINUSOIDAL 5.0;
+   in: 0.75 0.0;
+   after: "entry_scroll_right";
+}
+program {
+   name: "entry_scroll_right";
+   action: STATE_SET "over" 0.0;
+   target: "playlist_entry_name";
+   transition: SINUSOIDAL 5.0;
+   in: 1.5 0.0;
+   after: "entry_scroll_left";
+}
+program {
+   name: "entry_hover_stop";
+   signal: "mouse,out";
+   source: "entry_rect";
+   action: ACTION_STOP;
+   target: "entry_scroll_begin";
+   target: "entry_scroll_left";
+   target: "entry_scroll_right";
+   after: "entry_scroll_reset";
+}
+program {
+   name: "entry_scroll_reset";
+   action: STATE_SET "default" 0.0;
+   target: "playlist_entry_name";
+   target: "playlist_entry_length";
+}

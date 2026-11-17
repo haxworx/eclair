@@ -1,0 +1,78 @@
+program {
+   name: "accent_0_rise";
+   action: STATE_SET "lit" 0.0; target: "playback_accent_0";
+   transition: SINUSOIDAL (ACCENT_PERIOD + 0.00); in: 0.00 0;
+   after: "accent_0_fall";
+}
+program {
+   name: "accent_0_fall";
+   action: STATE_SET "default" 0.0; target: "playback_accent_0";
+   transition: SINUSOIDAL (ACCENT_PERIOD + 0.00);
+   after: "accent_0_rise";
+}
+program {
+   name: "accent_1_rise";
+   action: STATE_SET "lit" 0.0; target: "playback_accent_1";
+   transition: SINUSOIDAL (ACCENT_PERIOD + 0.17); in: 0.23 0;
+   after: "accent_1_fall";
+}
+program {
+   name: "accent_1_fall";
+   action: STATE_SET "default" 0.0; target: "playback_accent_1";
+   transition: SINUSOIDAL (ACCENT_PERIOD + 0.17);
+   after: "accent_1_rise";
+}
+program {
+   name: "accent_2_rise";
+   action: STATE_SET "lit" 0.0; target: "playback_accent_2";
+   transition: SINUSOIDAL (ACCENT_PERIOD + 0.34); in: 0.46 0;
+   after: "accent_2_fall";
+}
+program {
+   name: "accent_2_fall";
+   action: STATE_SET "default" 0.0; target: "playback_accent_2";
+   transition: SINUSOIDAL (ACCENT_PERIOD + 0.34);
+   after: "accent_2_rise";
+}
+program {
+   name: "accent_play"; signal: "signal_play"; source: "eclair_bin";
+   action: ACTION_STOP;
+   target: "accent_0_rise";
+   target: "accent_0_fall";
+   target: "accent_1_rise";
+   target: "accent_1_fall";
+   target: "accent_2_rise";
+   target: "accent_2_fall";
+   target: "accent_idle";
+   after: "accent_0_rise"; after: "accent_1_rise"; after: "accent_2_rise";
+}
+program {
+   name: "accent_pause"; signal: "signal_pause"; source: "eclair_bin";
+   action: ACTION_STOP;
+   target: "accent_0_rise";
+   target: "accent_0_fall";
+   target: "accent_1_rise";
+   target: "accent_1_fall";
+   target: "accent_2_rise";
+   target: "accent_2_fall";
+   target: "accent_idle";
+   after: "accent_idle";
+}
+program {
+   name: "accent_stop"; signal: "signal_stop"; source: "eclair_bin";
+   action: ACTION_STOP;
+   target: "accent_0_rise";
+   target: "accent_0_fall";
+   target: "accent_1_rise";
+   target: "accent_1_fall";
+   target: "accent_2_rise";
+   target: "accent_2_fall";
+   target: "accent_idle";
+   after: "accent_idle";
+}
+program {
+   name: "accent_idle";
+   action: STATE_SET "default" 0.0;
+   target: "playback_accent_0"; target: "playback_accent_1"; target: "playback_accent_2";
+   transition: SINUSOIDAL 0.4;
+}

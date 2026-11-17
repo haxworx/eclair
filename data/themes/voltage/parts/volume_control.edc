@@ -1,0 +1,57 @@
+/* volume_bar: visible rail, generous hit area, then draggable thumb. */
+part {
+   name: "volume_bar"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 246 188; to: "body"; }
+      rel2 { relative: 0 0; offset: 322 191; to: "body"; }
+      image.normal: "track.svg";
+   }
+}
+part {
+   name: "volume_bar_confine"; type: RECT; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1; visible: 0;
+      rel1 { relative: 0 0; offset: 239 183; to: "body"; }
+      rel2 { relative: 0 0; offset: 329 196; to: "body"; }
+   }
+}
+part {
+   name: "volume_bar_track"; type: RECT; scale: 1;
+   description {
+      state: "default" 0.0; offset_scale: 1; color: 0 0 0 0;
+      rel1 { to: "volume_bar_confine"; offset: 0 -3; }
+      rel2 { to: "volume_bar_confine"; offset: -1 2; }
+   }
+}
+part {
+   name: "volume_bar_drag"; type: VECTOR; scale: 1;
+   dragable { confine: "volume_bar_confine"; x: 1 1 1; y: 0 0 0; }
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      min: 14 14; max: 14 14;
+      image.normal: "thumb.svg";
+      
+   }
+   description { state: "play" 0.0; inherit: "default" 0.0; visible: 1; }
+   description { state: "stop" 0.0; inherit: "default" 0.0;  }
+   description { state: "down" 0.0; inherit: "play" 0.0; image.normal: "thumb_down.svg"; }
+}
+part {
+   name: "volume_bar_drag_glow"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; color: 255 255 255 0;
+      rel1.to: "volume_bar_drag"; rel2.to: "volume_bar_drag";
+      image.normal: "thumb_glow.svg";
+   }
+   description { state: "visible" 0.0; inherit: "default" 0.0; color: 255 255 255 255; }
+}
+part {
+   name: "volume_icon"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 225 183; to: "body"; }
+      rel2 { relative: 0 0; offset: 236 196; to: "body"; }
+      image.normal: "speaker.svg";
+   }
+}

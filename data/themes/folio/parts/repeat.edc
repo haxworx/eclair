@@ -1,0 +1,63 @@
+/* Playback mode controls stay beside the volume control. */
+part {
+   name: "button_repeat";
+   type: VECTOR;
+   scale: 1;
+   description {
+      state: "default" 0.0;
+      offset_scale: 1;
+      rel1 { relative: 0 0; offset: 24 308; to: "body"; }
+      rel2 { relative: 0 0; offset: 47 327; to: "body"; }
+      image.normal: "repeat_off.svg";
+   }
+   description {
+      state: "enabled" 0.0;
+      inherit: "default" 0.0;
+      image.normal: "repeat_on.svg";
+   }
+}
+part {
+   name: "button_repeat_hover";
+   type: RECT;
+   mouse_events: 0;
+   description {
+      state: "default" 0.0;
+      rel1.to: "button_repeat";
+      rel2.to: "button_repeat";
+      color: 255 255 255 0;
+   }
+   description { state: "over" 0.0; inherit: "default" 0.0; color: 255 255 255 22; }
+   description { state: "down" 0.0; inherit: "default" 0.0; color: 0 0 0 24; }
+}
+
+/* Shuffle shares the playback mode row. */
+part {
+   name: "button_shuffle";
+   type: VECTOR;
+   scale: 1;
+   description {
+      state: "default" 0.0;
+      offset_scale: 1;
+      rel1 { relative: 0 0; offset: 52 308; to: "body"; }
+      rel2 { relative: 0 0; offset: 75 327; to: "body"; }
+      image.normal: "shuffle_off.svg";
+   }
+   description {
+      state: "enabled" 0.0;
+      inherit: "default" 0.0;
+      image.normal: "shuffle_on.svg";
+   }
+}
+part {
+   name: "button_shuffle_hover";
+   type: RECT;
+   mouse_events: 0;
+   description {
+      state: "default" 0.0;
+      rel1.to: "button_shuffle";
+      rel2.to: "button_shuffle";
+      color: 255 255 255 0;
+   }
+   description { state: "over" 0.0; inherit: "default" 0.0; color: 255 255 255 22; }
+   description { state: "down" 0.0; inherit: "default" 0.0; color: 0 0 0 24; }
+}

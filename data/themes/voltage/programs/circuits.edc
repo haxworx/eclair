@@ -1,0 +1,64 @@
+/* All four points run at constant speed along each straight segment.
+ * Staggered followers share the same route and speed as the bright leader. */
+#define CIRCUIT_CANCEL(NAME) \
+target: NAME"_start"; target: NAME"_seed"; \
+target: NAME"_p1"; target: NAME"_p2"; target: NAME"_p3"; \
+target: NAME"_fade"; target: NAME"_rest"; target: NAME"_idle";
+#define CIRCUIT_TRACE(NAME, SVG, X0, Y0, X1, Y1, X2, Y2, X3, Y3, T1, T2, T3, ALPHA, DELAY) \
+program { \
+   name: NAME"_play"; signal: "signal_play"; source: "eclair_bin"; \
+   action: ACTION_STOP; CIRCUIT_CANCEL(NAME) \
+   after: NAME"_start"; \
+} \
+program { \
+   name: NAME"_start"; in: DELAY 0; \
+   action: STATE_SET "default" 0.0; target: NAME; \
+   after: NAME"_seed"; \
+} \
+program { \
+   name: NAME"_seed"; \
+   action: STATE_SET "p0" 0.0; target: NAME; \
+   after: NAME"_p1"; \
+} \
+program { \
+   name: NAME"_p1"; \
+   action: STATE_SET "p1" 0.0; target: NAME; \
+   transition: LINEAR T1; after: NAME"_p2"; \
+} \
+program { \
+   name: NAME"_p2"; \
+   action: STATE_SET "p2" 0.0; target: NAME; \
+   transition: LINEAR T2; after: NAME"_p3"; \
+} \
+program { \
+   name: NAME"_p3"; \
+   action: STATE_SET "p3" 0.0; target: NAME; \
+   transition: LINEAR T3; after: NAME"_fade"; \
+} \
+program { \
+   name: NAME"_fade"; \
+   action: STATE_SET "off" 0.0; target: NAME; \
+   transition: SINUSOIDAL 0.25; after: NAME"_rest"; \
+} \
+program { \
+   name: NAME"_rest"; in: 0.7 0; \
+   action: STATE_SET "default" 0.0; target: NAME; \
+   after: NAME"_seed"; \
+} \
+program { \
+   name: NAME"_pause"; signal: "signal_pause"; source: "eclair_bin"; \
+   action: ACTION_STOP; CIRCUIT_CANCEL(NAME) \
+   after: NAME"_idle"; \
+} \
+program { \
+   name: NAME"_stop"; signal: "signal_stop"; source: "eclair_bin"; \
+   action: ACTION_STOP; CIRCUIT_CANCEL(NAME) \
+   after: NAME"_idle"; \
+} \
+program { \
+   name: NAME"_idle"; \
+   action: STATE_SET "default" 0.0; target: NAME; \
+}
+#include "../circuit-routes.edc"
+#undef CIRCUIT_TRACE
+#undef CIRCUIT_CANCEL

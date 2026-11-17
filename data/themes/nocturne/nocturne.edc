@@ -1,0 +1,52 @@
+#define ACCENT_DX 0
+#define ACCENT_DY 0
+#define ACCENT_PERIOD 2.1
+#define THEME_INK 215 221 239 255
+#define REPEAT_INK 215 221 239 255
+#define REPEAT_ACTIVE_INK 26 36 42 255
+#include "images/images.edc"
+data {
+   item: "current_entry_bg_color" "111 213 193 60";
+   item: "current_entry_fg_color" "211 244 234 255";
+   item: "selected_entry_bg_color" "172 150 232 70";
+   item: "selected_entry_fg_color" "240 234 255 255";
+}
+fonts {
+   font: "Vera.ttf" "Edje Vera";
+}
+
+collections {
+   group {
+      name: "eclair_main_body";
+      min: 366 610;
+      max: 366 610;
+      parts {
+         #include "../common/shadows.edc"
+         #include "parts/playlist_back.edc"
+         #include "parts/body.edc"
+         #include "parts/volume_control.edc"
+         #include "parts/progress_bar.edc"
+         #include "parts/info_bar.edc"
+         #include "parts/navigation_buttons.edc"
+         #include "parts/repeat.edc"
+         #include "parts/playlist_front.edc"
+         #include "../common/playback-motion-parts.edc"
+         #include "../common/menu-parts.edc"
+      }
+      programs {
+         #include "../common/playback-motion-programs.edc"
+         #include "../common/menu-programs.edc"
+         #include "programs/playlist.edc"
+         #include "../default/programs/body.edc"
+         #include "../default/programs/navigation_buttons.edc"
+         #include "../common/repeat-programs.edc"
+         #include "../default/programs/progress_bar.edc"
+         #include "../default/programs/volume_control.edc"
+         #include "../common/title-scroll.edc"
+         #include "../default/programs/core.edc"
+         #include "programs/status.edc"
+      }
+   }
+   #include "groups/playlist_entry.edc"
+   #include "groups/dialogs.edc"
+}

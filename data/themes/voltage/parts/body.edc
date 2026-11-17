@@ -1,0 +1,61 @@
+part {
+   name: "body";
+   type: VECTOR;
+   scale: 1;
+   mouse_events: 0;
+   description {
+      state: "default" 0.0;
+      offset_scale: 1;
+      min: 346 208; max: 346 208;
+      align: 0.5 0;
+      rel1.offset: 21 14;
+      rel2.offset: -22 -29;
+      image.normal: "body.svg";
+   }
+}
+part {
+   name: "window_button_bar";
+   type: RECT;
+   scale: 1;
+   mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      color: 0 0 0 0;
+      rel1 { relative: 0 0; offset: 282 0; to: "body"; }
+      rel2 { relative: 0 0; offset: 333 19; to: "body"; }
+   }
+}
+#define WINDOW_BUTTON(NAME, X) \
+part { \
+   name: NAME; type: VECTOR; scale: 1; \
+   description { \
+      state: "default" 0.0; offset_scale: 1; \
+      rel1 { relative: 0 0; offset: X 1; to: "body"; } \
+      rel2 { relative: 0 0; offset: (X + 19) 20; to: "body"; } \
+      image.normal: NAME".svg"; \
+   } \
+   description { state: "down" 0.0; inherit: "default" 0.0; color: 180 180 180 255; } \
+}
+WINDOW_BUTTON("button_minimize", 286)
+WINDOW_BUTTON("button_close", 310)
+
+part {
+   name: "status_light"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 24 111; to: "body"; }
+      rel2 { relative: 0 0; offset: 321 114; to: "body"; }
+      image.normal: "status.svg"; color: 255 255 255 80;
+   }
+   description { state: "bright" 0.0; inherit: "default" 0.0; color: 255 255 255 255; }
+}
+part {
+   name: "brand"; type: TEXT; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 33 8; to: "body"; }
+      rel2 { relative: 0 0; offset: 256 23; to: "body"; }
+      color: 208 242 239 255;
+      text { text: "V O L T A G E"; font: "Edje Vera"; size: 9; align: 0 0.5; }
+   }
+}

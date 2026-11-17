@@ -1,0 +1,33 @@
+/* Minimum text width makes these alignment changes move only overflowing text. */
+program {
+   name: "info_scroll_restart";
+   signal: "signal_title_changed";
+   source: "eclair_bin";
+   action: ACTION_STOP;
+   target: "info_scroll_left";
+   target: "info_scroll_right";
+   target: "info_scroll_reset";
+   after: "info_scroll_reset";
+}
+program {
+   name: "info_scroll_reset";
+   action: STATE_SET "default" 0.0;
+   target: "current_media_name";
+   after: "info_scroll_left";
+}
+program {
+   name: "info_scroll_left";
+   action: STATE_SET "right" 0.0;
+   transition: SINUSOIDAL 5.0;
+   target: "current_media_name";
+   in: 1.5 0.0;
+   after: "info_scroll_right";
+}
+program {
+   name: "info_scroll_right";
+   action: STATE_SET "default" 0.0;
+   transition: SINUSOIDAL 5.0;
+   target: "current_media_name";
+   in: 1.5 0.0;
+   after: "info_scroll_left";
+}

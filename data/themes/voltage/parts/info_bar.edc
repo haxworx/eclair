@@ -1,0 +1,30 @@
+part {
+   name: "info_bar"; type: VECTOR; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { relative: 0 0; offset: 24 34; to: "body"; }
+      rel2 { relative: 0 0; offset: 321 65; to: "body"; }
+      image.normal: "display.svg";
+   }
+}
+part {
+   name: "info_bar_clip"; type: RECT; scale: 1; mouse_events: 0;
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      rel1 { to: "info_bar"; offset: 0 0; }
+      rel2 { to: "info_bar"; offset: -1 -1; }
+   }
+}
+part {
+   name: "current_media_name"; type: TEXT; scale: 1; mouse_events: 0;
+   clip_to: "info_bar_clip";
+   description {
+      state: "default" 0.0; offset_scale: 1;
+      align: 0 0.5;
+      rel1 { to: "info_bar_clip"; offset: 0 0; }
+      rel2 { to: "info_bar_clip"; offset: -1 -1; }
+      color: THEME_INK;
+      text { text: "Eclair"; font: "Edje Vera"; size: 11; min: 1 1; ellipsis: -1; }
+   }
+   description { state: "right" 0.0; inherit: "default" 0.0; align: 1 0.5; }
+}

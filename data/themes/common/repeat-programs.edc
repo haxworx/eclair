@@ -1,0 +1,75 @@
+program {
+   name: "repeat_clicked";
+   signal: "mouse,clicked,1"; source: "button_repeat";
+   action: SIGNAL_EMIT "eclair_repeat_toggle" "";
+}
+program {
+   name: "repeat_enabled";
+   signal: "signal_repeat_enabled"; source: "*";
+   action: STATE_SET "enabled" 0.0;
+   target: "button_repeat";
+}
+program {
+   name: "repeat_disabled";
+   signal: "signal_repeat_disabled"; source: "*";
+   action: STATE_SET "default" 0.0;
+   target: "button_repeat";
+}
+program {
+   name: "repeat_in";
+   signal: "mouse,in"; source: "button_repeat";
+   action: STATE_SET "over" 0.0; target: "button_repeat_hover";
+}
+program {
+   name: "repeat_out";
+   signal: "mouse,out"; source: "button_repeat";
+   action: STATE_SET "default" 0.0; target: "button_repeat_hover";
+}
+program {
+   name: "repeat_down";
+   signal: "mouse,down,1*"; source: "button_repeat";
+   action: STATE_SET "down" 0.0; target: "button_repeat_hover";
+}
+program {
+   name: "repeat_up";
+   signal: "mouse,up,1"; source: "button_repeat";
+   action: STATE_SET "over" 0.0; target: "button_repeat_hover";
+}
+
+program {
+   name: "shuffle_clicked";
+   signal: "mouse,clicked,1"; source: "button_shuffle";
+   action: SIGNAL_EMIT "eclair_shuffle_toggle" "";
+}
+program {
+   name: "shuffle_enabled";
+   signal: "signal_shuffle_enabled"; source: "*";
+   action: STATE_SET "enabled" 0.0;
+   target: "button_shuffle";
+}
+program {
+   name: "shuffle_disabled";
+   signal: "signal_shuffle_disabled"; source: "*";
+   action: STATE_SET "default" 0.0;
+   target: "button_shuffle";
+}
+program {
+   name: "shuffle_in";
+   signal: "mouse,in"; source: "button_shuffle";
+   action: STATE_SET "over" 0.0; target: "button_shuffle_hover";
+}
+program {
+   name: "shuffle_out";
+   signal: "mouse,out"; source: "button_shuffle";
+   action: STATE_SET "default" 0.0; target: "button_shuffle_hover";
+}
+program {
+   name: "shuffle_down";
+   signal: "mouse,down,1*"; source: "button_shuffle";
+   action: STATE_SET "down" 0.0; target: "button_shuffle_hover";
+}
+program {
+   name: "shuffle_up";
+   signal: "mouse,up,1"; source: "button_shuffle";
+   action: STATE_SET "over" 0.0; target: "button_shuffle_hover";
+}
