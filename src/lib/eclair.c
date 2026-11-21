@@ -55,7 +55,6 @@ Eina_Bool eclair_init(Eclair *eclair, int *argc, char ***argv)
    eclair->gui_engine = ECLAIR_SOFTWARE;
    eclair->theme_from_args = EINA_FALSE;
    eclair->gui_theme_file = strdup(PACKAGE_DATA_DIR "/themes/default.edj");
-   eclair->video_engine = ECLAIR_SOFTWARE;
    eclair->video_module = ECLAIR_VIDEO_AUTO;
    eclair->start_playing = 0;
 
@@ -110,7 +109,7 @@ Eina_Bool eclair_init(Eclair *eclair, int *argc, char ***argv)
    _eclair_create_playlist_window(eclair);
    _eclair_create_equalizer_window(eclair);
    _eclair_create_cover_window(eclair);
-   eclair_create_video_window(&eclair->video, eclair->video_engine);
+   eclair_video_start(&eclair->video);
    _eclair_add_inter_windows_callbacks(eclair);
    eclair_dialogs_init(&eclair->dialogs_manager, eclair);
    eclair_playlist_container_set_media_list(eclair->playlist_container, &eclair->playlist.playlist);
@@ -172,8 +171,7 @@ void eclair_update(Eclair *eclair)
 
    position = eclair_position_get(eclair);
 
-   //Display subtitles
-   eclair_subtitles_display_current_subtitle(&eclair->subtitles, eclair_position_get(eclair), eclair->video.subtitles_object);
+   eclair_subtitles_display_current_subtitle(&eclair->subtitles, position, eclair->video.subtitles_object);
 
    if (!eclair->video.video_object || !eclair->gui_window)
       return;
@@ -193,13 +191,12 @@ void eclair_update(Eclair *eclair)
       eclair->dont_update_progressbar = 0;
    else if (eclair->seek_to_pos >= 0.0)
       eclair->seek_to_pos = -1.0;
-   edje_object_part_drag_value_set(eclair->gui_window->edje_object, "progress_bar_drag", position / length, 0.0);
+   edje_object_part_drag_value_set(eclair->gui_window->edje_object, "progress_bar_drag", length > 0.0 ? position / length : 0.0, 0.0);
 }
 
 //Update the gui infos about the current media file
 void eclair_update_current_file_info(Eclair *eclair, Eina_Bool force_cover_update)
 {   
-   char *window_title;
    char *artist_title_string;
    const char *filename;
    Eclair_Media_File *current_file;
@@ -255,20 +252,6 @@ void eclair_update_current_file_info(Eclair *eclair, Eina_Bool force_cover_updat
       eclair_all_windows_text_set(eclair, "bitrate", "-");
    }
    
-
-   //Update the title of the video window
-   if (eclair->video.window)
-   {
-      if (current_file && current_file->path)
-      {
-         window_title = malloc(strlen(current_file->path) + strlen("eclair: ") + 1);
-         sprintf(window_title, "eclair: %s", current_file->path);
-         elm_win_title_set(eclair->video.window, window_title);
-         free(window_title);
-      }
-      else
-         elm_win_title_set(eclair->video.window, "eclair");
-   }
 
    //Update the current cover
    if (current_file)
@@ -387,21 +370,18 @@ void eclair_play_file(Eclair *eclair, const char *path)
 
    if (path)
    {
-      emotion_object_file_set(eclair->video.video_object, path);
+      eclair_video_hide(&eclair->video);
+      if (!emotion_object_file_set(eclair->video.video_object, path))
+      {
+         eclair_stop(eclair);
+         return;
+      }
       emotion_object_play_set(eclair->video.video_object, 0);
-      eclair_progress_rate_set(eclair, 0.0);
+      emotion_object_position_set(eclair->video.video_object, 0.0);
+      eclair->seek_to_pos = -1.0;
+      eclair_subtitles_load_from_media_file(&eclair->subtitles, path);
       eclair->state = ECLAIR_PAUSE;
       eclair_play(eclair);
-   
-      eclair_subtitles_load_from_media_file(&eclair->subtitles, path);
-      
-      if (eclair->video.window)
-      {
-         if (emotion_object_video_handled_get(eclair->video.video_object))
-            evas_object_show(eclair->video.window);
-         else
-            evas_object_hide(eclair->video.window);
-      }
    }
    else
       eclair_stop(eclair);
@@ -475,7 +455,7 @@ void eclair_play(Eclair *eclair)
       eclair_play_current(eclair);
 }
 
-//Stop the playback and hide the video window
+//Stop playback and restore the artwork
 void eclair_stop(Eclair *eclair)
 {
    if (!eclair)
@@ -490,8 +470,7 @@ void eclair_stop(Eclair *eclair)
    eclair_all_windows_text_set(eclair, "time_elapsed", "0:00");
    eclair_send_signal_to_all_windows(eclair, "signal_stop");
    
-   if (eclair->video.window)
-      evas_object_hide(eclair->video.window);
+   eclair_video_hide(&eclair->video);
 
    eclair->state = ECLAIR_STOP;
 }
@@ -752,6 +731,12 @@ Eina_Bool eclair_theme_set(Eclair *eclair, const char *path)
    /* Load the new main window before removing the working interface. */
    Eclair_Window *main = eclair_window_create(theme, "main", "eclair", eclair->gui_engine, eclair, 1);
    if (!main) { free(theme); return EINA_FALSE; }
+   if (eclair->video.video_object && !eclair_video_attach(&eclair->video, main))
+   {
+      eclair_window_del(main);
+      free(theme);
+      return EINA_FALSE;
+   }
    eclair_dialogs_shutdown(&eclair->dialogs_manager);
    eclair_window_del(eclair->gui_window);
    eclair_window_del(eclair->playlist_window);

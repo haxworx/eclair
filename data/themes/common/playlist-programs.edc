@@ -47,3 +47,14 @@ program {
    action: STATE_SET "default" 0.0; target: "cover";
    transition: SINUSOIDAL 0.65;
 }
+
+program {
+   signal: "signal_video_show"; source: "eclair_bin";
+   action: STATE_SET "playing" 0.0;
+   target: "artwork_video"; target: "artwork_subtitles";
+}
+program {
+   signal: "signal_video_hide"; source: "eclair_bin";
+   action: STATE_SET "default" 0.0;
+   target: "artwork_video"; target: "artwork_subtitles";
+}

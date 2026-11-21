@@ -39,22 +39,12 @@ Eina_Bool eclair_args_parse(Eclair *eclair, Eina_List **filenames)
             free(eclair->gui_theme_file);
             eclair->gui_theme_file = strdup(optarg);
             break;
+         case 'v':
          case 'g':
             if (strcmp(optarg, "software") == 0) 
                eclair->gui_engine = ECLAIR_SOFTWARE;
             else if (strcmp(optarg, "gl") == 0)
                eclair->gui_engine = ECLAIR_GL;
-            else
-            {
-               _eclair_args_print_usage();
-               return 0;
-            }
-            break;
-         case 'v':
-            if (strcmp(optarg, "software") == 0)
-               eclair->video_engine = ECLAIR_SOFTWARE;
-            else if (strcmp(optarg, "gl") == 0)
-               eclair->video_engine = ECLAIR_GL;
             else
             {
                _eclair_args_print_usage();
@@ -94,6 +84,6 @@ static void _eclair_args_print_usage()
       "-h, --help                            Print this message and exit\n"
       "-t, --theme                           Specify an edj theme file for eclair\n"
       "-g, --gui-engine [software|gl]        Specify the gui engine\n"
-      "-v, --video-engine [software|gl]      Specify the video engine\n"
+      "-v, --video-engine [software|gl]      Alias for --gui-engine\n"
       "-m, --video-module [auto|gstreamer]   Specify the video module\n");
 }

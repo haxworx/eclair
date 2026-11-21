@@ -30,8 +30,8 @@ void eclair_key_press_cb(void *data, Evas *evas, Evas_Object *obj, void *event_i
       return;
 
    ev = event_info;
-   if (strcmp(ev->key, "f") == 0 && eclair->video.window)
-      elm_win_fullscreen_set(eclair->video.window, !elm_win_fullscreen_get(eclair->video.window));
+   if (strcmp(ev->key, "f") == 0 && eclair->gui_window)
+      elm_win_fullscreen_set(eclair->gui_window->window, !elm_win_fullscreen_get(eclair->gui_window->window));
    else if (strcmp(ev->key, "space") == 0 || strcmp(ev->key, "p") == 0)
    {
       if (eclair->state == ECLAIR_PLAYING)

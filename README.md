@@ -4,7 +4,7 @@ A small, skinnable music and video player built with the **Enlightenment Foundat
 
 ## ✨ Features
 
-- Play music and videos, with subtitle support.
+- Play music and watch videos in the album artwork pane, with subtitle support.
 - Keep your collection handy with playlists, search, shuffle, and repeat.
 - Drag and drop media files or your own album artwork.
 - Choose the **Default**, **Gant**, **Nocturne**, **Folio**, **Frequency**, **Voltage**, or **Undertow** theme, with SVG controls and artwork that stay sharp at desktop scale, or load a custom player theme.
@@ -12,7 +12,7 @@ A small, skinnable music and video player built with the **Enlightenment Foundat
 
 Use the two icon buttons beside the volume control to repeat the whole playlist (loop arrows) or shuffle playback (crossed arrows). Each button stays highlighted while enabled, and both settings are remembered.
 
-Use the burger button in the title bar to open the player menu. A permanent album artwork pane sits between the playback controls and playlist in every theme, inside one fixed player layout. Drop an image onto the artwork to replace the current album cover. Folio also displays album artwork on its record.
+Use the burger button in the title bar to open the player menu. A permanent album artwork pane sits between the playback controls and playlist in every theme, inside one fixed player layout. Videos fit inside the artwork frame and stay visible when paused. Stopping playback restores the cover. Drop an image onto the artwork to replace the current album cover. Folio also displays album artwork on its record.
 
 New album covers fade gently into their frame. Each theme adds a small animation to the artwork pane during playback. These accents ease back to rest on pause or stop; the panes keep their fixed positions.
 
@@ -27,6 +27,8 @@ New album covers fade gently into their frame. Each theme adds a small animation
 ## 🎨 Theme gallery
 
 Seven different ways to listen. Choose yours from **☰ → Theme**.
+
+Custom themes can embed video using the `artwork_video` swallow and an optional `artwork_subtitles` swallow. The player emits `signal_video_show` and `signal_video_hide` from `eclair_bin` to control their visibility. The bundled themes define these parts in the shared artwork layout.
 
 <p align="center">
   <strong>Default</strong><br>

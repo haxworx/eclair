@@ -19,15 +19,16 @@ void eclair_subtitles_init(Eclair_Subtitles *subtitles)
 //Free the loaded subtitles
 void eclair_subtitles_free(Eclair_Subtitles *subtitles)
 {
-   Eina_List *l;
    Eclair_Subtitle *sub;
 
    if (!subtitles)
       return;
 
-   for (l = subtitles->subtitles; l && (sub = l->data); l = l->next)
+   EINA_LIST_FREE(subtitles->subtitles, sub)
+   {
       free(sub->subtitle);
-   eina_list_free(subtitles->subtitles);
+      free(sub);
+   }
    subtitles->subtitles = NULL;
 }
 
@@ -56,24 +57,17 @@ void eclair_subtitles_display_current_subtitle(Eclair_Subtitles *subtitles, doub
    char *markup;
    Evas_Textblock_Style *style;
    char style_text[256];
-   Evas_Coord width, height, subtitle_height;
 
    if (!subtitles || !subtitles_object) return;
    text = subtitles->enable ? eclair_subtitles_get_current_subtitle(subtitles, current_time) : NULL;
    style = evas_textblock_style_new();
-   snprintf(style_text, sizeof(style_text), "DEFAULT='font=Vera-Bold font_size=%d color=#ffffffff outline_color=#000000ff style=outline wrap=word align=center'", eclair_scale_pixels(24));
+   snprintf(style_text, sizeof(style_text), "DEFAULT='font=Sans:style=Bold font_size=%d color=#ffffffff outline_color=#000000ff style=outline wrap=word align=center'", eclair_scale_pixels(12));
    evas_textblock_style_set(style, style_text);
    evas_object_textblock_style_set(subtitles_object, style);
    evas_textblock_style_free(style);
    markup = evas_textblock_text_utf8_to_markup(subtitles_object, text ? text : "");
    evas_object_textblock_text_markup_set(subtitles_object, markup ? markup : "");
    free(markup);
-   evas_output_viewport_get(evas_object_evas_get(subtitles_object), NULL, NULL, &width, &height);
-   evas_object_resize(subtitles_object, width, height);
-   evas_object_textblock_size_formatted_get(subtitles_object, NULL, &subtitle_height);
-   evas_object_move(subtitles_object, 0, height - subtitle_height);
-   evas_object_resize(subtitles_object, width, subtitle_height);
-
 }
 
 //Return 0 if the two subtitles starts at the same time
@@ -111,8 +105,10 @@ Eina_Bool eclair_subtitles_load_from_media_file(Eclair_Subtitles *subtitles, con
    char *extension_start;
    int extension_start_id;
 
-   if (!subtitles || !media_file || !(extension_start = strrchr(media_file, '.')))
-      return 0;
+   if (!subtitles) return EINA_FALSE;
+   subtitles->enable = EINA_FALSE;
+   if (!media_file || !(extension_start = strrchr(media_file, '.')))
+      return EINA_FALSE;
    
    extension_start_id = extension_start - media_file + 1;
    subtitles_filename = malloc(strlen(media_file) + 10);
@@ -150,7 +146,7 @@ Eina_Bool eclair_subtitles_load_srt(Eclair_Subtitles *subtitles, const char *pat
 
    while (fgets(line, 4096, subtitles_file))
    {
-      if (strlen(line) <= 2)
+      if (line[strspn(line, " \t\r\n")] == '\0')
          continue;
 
       if (!have_num || have_text)

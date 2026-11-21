@@ -28,7 +28,6 @@ struct _Eclair
 {
    //Video related vars
    Eclair_Video video;
-   Eclair_Engine video_engine;
    Eclair_Video_Module video_module;
 
    //Gui related vars
