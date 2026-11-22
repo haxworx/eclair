@@ -1,73 +1,70 @@
 #!/usr/bin/env python3
-"""Bake Flat-style shadows around theme silhouettes (requires Pillow and rsvg-convert).
+"""Bake the fixed player silhouettes at 2x (requires Pillow and rsvg-convert).
 
-Generated PNGs are checked in; building Eclair needs neither tool. Unlike
-Flat's rectangular compositor clips, these shadows continue beneath rounded
-corners. Nine-patch borders preserve their softness when panels resize.
+The generated PNGs are checked in so building Eclair needs neither tool.
 """
 from io import BytesIO
 from pathlib import Path
-import subprocess
 import re
-from PIL import Image, ImageChops, ImageDraw, ImageFilter
+import subprocess
 
-ROOT = Path(__file__).resolve().parents[1] / 'data/themes'
+from PIL import Image, ImageChops, ImageFilter
+
+ROOT = Path(__file__).resolve().parents[2] / 'data/themes'
+
+# Blur radius in logical pixels, downward offset, and peak opacity.
+PROFILES = {
+    'default': (6, 7, 128),
+    'gant': (4, 5, 134),
+    'nocturne': (6, 6, 155),
+    'folio': (7, 5, 112),
+    'frequency': (5, 6, 144),
+    'voltage': (2, 2, 142),
+    'undertow': (7, 7, 148),
+}
 
 
-def alpha(directory, name):
-    source = directory / (name + '.svg')
-    w, h = map(int, re.search(r'width="(\d+)" height="(\d+)"', source.read_text()).groups())
+def alpha(directory, name, width, height):
     return Image.open(BytesIO(subprocess.check_output([
-        'rsvg-convert', '-w', str(w * 2), '-h', str(h * 2),
-        str(source)]))).convert('RGBA').getchannel('A')
+        'rsvg-convert', '-w', str(width * 2), '-h', str(height * 2),
+        str(directory / f'{name}.svg')]))).convert('RGBA').getchannel('A')
 
 
-def build(root, theme):
-    directory = root / theme / 'images'
-    silhouette = alpha(directory, 'body')
-    # Side grips protrude beyond the body. Bake their actual SVG outlines into
-    # the same mask so the outer edge, rather than the body seam, casts a shadow.
-    grips = []
-    for side in ('left', 'right'):
-        parts = (root / theme / 'parts' / f'{side}_side_front.edc').read_text()
-        offsets = re.findall(r'offset:\s*(-?\d+)\s+(-?\d+);', parts)
-        x, y = map(int, offsets[0])
-        right, bottom = map(int, offsets[1])
-        grip = alpha(directory, f'{side}_border').resize(
-            ((right - x + 1) * 2, (bottom - y + 1) * 2), Image.Resampling.LANCZOS)
-        grips.append((x, y, grip))
-    # Built-in grips extend six logical pixels left and nine right.
-    complete = Image.new('L', (silhouette.width + 30, silhouette.height))
-    complete.paste(silhouette, (12, 0))
-    for x, y, grip in grips:
-        layer = Image.new('L', complete.size)
-        layer.paste(grip, (x * 2 + 12, y * 2))
-        complete = ImageChops.lighter(complete, layer)
-    silhouette = complete
-    for name in ('body', 'artwork', 'drawer'):
-        if name == 'body':
-            mask = silhouette
-        elif name == 'drawer':
-            background = alpha(directory, 'playlist_background')
-            footer = alpha(directory, 'playlist_bottom')
-            mask = Image.new('L', (background.width, background.height + footer.height))
-            mask.paste(background, (0, 0))
-            mask.paste(footer, (0, background.height))
-        else:
-            # Canonical artwork panel; only the centre stretches at runtime.
-            mask = Image.new('L', (400, 280))
-            ImageDraw.Draw(mask).rounded_rectangle((0, 0, 399, 279),
-                                                  radius=16,
-                                                  fill=255)
-        shadow = Image.new('L', (mask.width + 84, mask.height + 84))
-        # Flat's 21/14/28 margins, 7px downward displacement and soft black mask.
-        shadow.paste(mask, (42, 42))
-        shadow = shadow.filter(ImageFilter.GaussianBlur(12)).point(lambda a: a // 2)
-        image = Image.new('RGBA', shadow.size)
-        image.putalpha(shadow)
-        image.save(directory / f'shadow_{name}.png', optimize=True)
+def build(theme, blur, offset, opacity):
+    directory = ROOT / theme / 'images'
+    width, body_height = map(int, re.search(
+        r'width="(\d+)" height="(\d+)"', (directory / 'body.svg').read_text()
+    ).groups())
+    window_width, window_height = map(int, re.search(
+        r'min: (\d+) (\d+);', (directory.parent / f'{theme}.edc').read_text()
+    ).groups())
+
+    # The full surface starts 14 px down and ends 28 px above the window bottom.
+    surface = alpha(directory, 'body', width, window_height - 14 - 28)
+    mask = Image.new('L', (window_width * 2, window_height * 2))
+    origin = (window_width - width, 14 * 2)
+    mask.paste(surface, origin)
+
+    # The playback panel sits over the taller surface and can fill its corners.
+    front = Image.new('L', mask.size)
+    front.paste(alpha(directory, 'body', width, body_height), origin)
+    mask = ImageChops.lighter(mask, front)
+
+    cast = Image.new('L', mask.size)
+    cast.paste(mask, (0, offset * 2))
+    cast = cast.filter(ImageFilter.GaussianBlur(blur * 2))
+    cast = cast.point(lambda value: value * opacity // 255)
+
+    # A close, undisplaced shadow follows the SVG's rounded or chamfered edge
+    # even where the softer cast shadow extends into the corner.
+    contact = mask.filter(ImageFilter.GaussianBlur(2))
+    contact = contact.point(lambda value: value * opacity // (3 * 255))
+
+    image = Image.new('RGBA', mask.size)
+    image.putalpha(ImageChops.screen(cast, contact))
+    image.save(directory / 'shadow_body.png', optimize=True)
 
 
 if __name__ == '__main__':
-    for theme in ('default', 'gant', 'nocturne', 'folio', 'frequency', 'voltage', 'undertow'):
-        build(ROOT, theme)
+    for theme, profile in PROFILES.items():
+        build(theme, *profile)
